@@ -1,0 +1,93 @@
+<!DOCTYPE html> <!-- HTML5 -->
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      .work-space {height: 50%;}
+      #map-canvas {height: 500px;}
+
+    </style>
+    <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
+
+
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEGTX8P0N1ODdh8zbGuSn0pbJwzdvWvOA&sensor=true">
+    </script>
+
+
+    <script type = "text/javascript">
+     function initialize() {
+       var mapOptions = { zoom:10,
+                          center: new google.maps.LatLng(-25,129)
+             };
+     
+     var map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+     var marker = new google.maps.Marker({
+           position: map.getCenter(),
+           map: map,
+           title: 'Click to zoom'
+       }); 
+     
+
+     google.maps.event.addListener(marker,'click',function(){
+      map.setZoom(8);
+     map.setCenter(marker.getPosition);  
+    });
+    function zoomMap(){
+      map.setZoom(map.getZoom()+1); 
+    };
+
+
+
+    var but= document.getElementById("zoombutton");
+    but.addEventListener('click', function(event) {
+		    zoomMap();
+    });
+
+
+
+    function locate(arr,sts){
+       if(sts === 	google.maps.GeocoderStatus.OK){
+         map.setCenter(arr[0].geometry.location);
+         map.setZoom(17);
+       }
+    };
+
+    function locateField(){
+     var field = document.getElementById("fieldlocate");
+     var gc = new google.maps.Geocoder();
+     gc.geocode({"address":field.value},function(result, sts){   
+          locate(result,sts);             });
+    };
+
+    but = document.getElementById("locate");
+    but.addEventListener('click', function(event) {
+		    locateField();
+     });
+
+    
+     directionsPanel = document.getElementById("my_textual_div");
+     tsp = new BpTspSolver(map, directionsPanel);
+ 
+    
+    }
+     google.maps.event.addDomListener(window, 'load', initialize);  
+      
+     
+    </script>
+
+  </head>
+  <body>
+   <div class="span9">
+    <div id="map-canvas"/>
+   </div>
+  <div class="span6">
+   <input type="text" id="fieldlocate">
+   <button  id="locate">Locate</button>
+
+   <button  id="zoombutton">Zoom</button>
+  </div>
+  </body>
+</html>
